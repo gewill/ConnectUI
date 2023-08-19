@@ -1,0 +1,82 @@
+// MARK: - 通用
+": " = "：";
+"," = "，";
+"OK" = "好的";
+"Help" = "帮助";
+
+// MARK: - 报告
+"Apps Sales Reports" = "应用销售报告";
+
+"day1" = "1天";
+"day7" = "7天";
+"day30" = "30天";
+"thisMonth" = "本月";
+
+"Select date" = "选择日期";
+"Revenue" = "收入";
+"Units" = "销量";
+"Updates" = "更新";
+"Total" = "总计";
+"IAP" = "应用内购";
+"App" = "应用";
+"Stop" = "停止";
+"Loading sales reports" = "销售报告加载中";
+"Range" = "范围";
+"Refresh" = "刷新";
+"Missing `Connect API Key` or invalid" = "缺少`Connect API 密钥`或无效";
+
+// MARK: - 密钥
+"Connect API Key" = "Connect API 密钥";
+"Verify" = "验证";
+"API test" = "接口测试";
+"Testing..." = "测试中...";
+"Success" = "成功";
+
+// MARK: - 帮助
+"Generate-Key" = "
+**如何生成和获取 AppStore Connect API 密钥**
+
+1. 登录 AppStore Connect。
+2. 选择 'Users and Access'（用户和访问） -> 'Keys'（密钥）选项卡。
+3. 点击 'Generate API Key'（生成 API 密钥）按钮。
+4. 选择 'Sales and Reports'（销售和报告）角色。
+5. 生成并下载密钥，用文本编辑器打开并复制所有内容。
+6. 在该页面上复制新建的密钥的 Key ID（密钥 ID）和Issuer ID（发放者 ID）。
+";
+"Get-Vendor-Number" = "
+**如何获取 Vendor Number**
+
+1. 打开 'Payments and Financial Reports'（付款和财务报告）页面。
+2. 在该页面上找到您的 Vendor Number（供应商编号）。
+";
+
+// MARK: - 设置
+"Settings" = "设置";
+
+"App Icon" = "应用图标";
+"App Version" = "应用版本";
+"Review on App Store" = "去App Store评价";
+
+"Open Source" = "开源库";
+"Type" = "类型";
+"Version" = "版本";
+"Unknown" = "未知";
+"Share App to friends" = "分享应用给朋友";
+"Feedback" = "反馈";
+"Email copied" = "已复制邮箱";
+
+"Language & Font" = "语言与字体";
+"Language" = "语言";
+"Font" = "字体";
+"Follow system" = "跟随系统";
+
+"Appearance" = "外观";
+"Light" = "浅色";
+"Dark" = "深色";
+
+"Haptic Feedback" = "触感反馈";
+
+"Caches" = "缓存";
+"Clear all caches" = "清空缓存";
+"Request data, ignore caches in database" = "请求数据，忽略数据库中的缓存";
+"All sales reports save in database by default." = "默认情况下，所有销售报表都保存在数据库中。";

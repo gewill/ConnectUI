@@ -1,0 +1,24 @@
+// MARK: - Reports
+"day1" = "1Day";
+"day7" = "7Days";
+"day30" = "30Days";
+"thisMonth" = "This Month";
+
+// MARK: - Help
+"Generate-Key" = "
+**How to Generate AppStore Connect API Key**
+
+1. Login to AppStore Connect.
+2. Select 'Users and Access' -> 'Keys' tab.
+3. Click on 'Generate API Key'.
+4. Choose the 'Sales and Reports' role.
+5. Generate and Download the key, open with text editor and copy all content.
+6. Copy the new Key ID and Issuer ID in the same page.
+";
+"Get-Vendor-Number" = "
+**How to Get Vendor Number**
+
+Open 'Payments and Financial Reports'.
+Locate your Vendor Number.
+";
+
