@@ -13,4 +13,9 @@ enum UserDefaultsKeys: String {
   case requestDataIgnoreCaches
   case lastCheckRatesDate
   case selectedDate
+  case showColorOptions
+  case foregroundColorHex
+  case colorSpeed
+  case colorNoise
+  case colorTransitionInterval
 }

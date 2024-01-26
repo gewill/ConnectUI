@@ -62,6 +62,7 @@ class SaleModel: BaseModel {
   }
 
   // MARK: - Add by me
+
   @Persisted(indexed: true) var connectKeyId: String
   @Persisted(indexed: true) var day: String
 

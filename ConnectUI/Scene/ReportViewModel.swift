@@ -1,4 +1,5 @@
 import AppStoreConnect_Swift_SDK
+import ColorfulX
 import Foundation
 import Gzip
 import RealmSwift
@@ -9,16 +10,39 @@ import SwiftyJSON
 @MainActor final class ReportViewModel: ObservableObject {
   @Published var totalSaleModel: SaleReportModel?
   @Published var dailySaleModels: [SaleReportModel] = []
-  @AppStorage(UserDefaultsKeys.selectedDate.rawValue) var selectedDate: Date = Date.now.addingTimeInterval(Date.oneDayInSeconds * -2)
-  
+  @AppStorage(UserDefaultsKeys.selectedDate.rawValue)
+  var selectedDate: Date = Date.now.addingTimeInterval(Date.oneDayInSeconds * -2)
+
   @Published var errorMessage: String = ""
   @Published var showToast = false
   @Published var isLoadingPage = false
-  
-  @AppStorage(UserDefaultsKeys.reportRange.rawValue) var reportRange: ReportRange = .day1
-  @AppStorage(UserDefaultsKeys.requestDataIgnoreCaches.rawValue) var requestDataIgnoreCaches: Bool = false
-  @AppStorage(UserDefaultsKeys.lastCheckRatesDate.rawValue) var lastCheckRatesDate: TimeInterval = Date().yesterday.unixTimestamp
-  
+
+  @AppStorage(UserDefaultsKeys.reportRange.rawValue)
+  var reportRange: ReportRange = .day1
+  @AppStorage(UserDefaultsKeys.requestDataIgnoreCaches.rawValue)
+  var requestDataIgnoreCaches: Bool = false
+  @AppStorage(UserDefaultsKeys.lastCheckRatesDate.rawValue)
+  var lastCheckRatesDate: TimeInterval = Date().yesterday.unixTimestamp
+
+  @AppStorage(UserDefaultsKeys.showColorOptions.rawValue)
+  var showColorOptions: Bool = false
+  @AppStorage(UserDefaultsKeys.colorSpeed.rawValue)
+  var colorSpeed: Double = 0.4
+  @AppStorage(UserDefaultsKeys.colorNoise.rawValue)
+  var colorNoise: Double = 0.0
+  @AppStorage(UserDefaultsKeys.colorTransitionInterval.rawValue)
+  var colorTransitionInterval: Double = 30
+  @AppStorage(UserDefaultsKeys.foregroundColorHex.rawValue)
+  var foregroundColorHex: String = "#111111"
+
+  var bindingForegroundColor: Binding<Color> {
+    .init {
+      Color(hex: self.foregroundColorHex)
+    } set: { color in
+      self.foregroundColorHex = color.hexString
+    }
+  }
+
   var filterReportDate: [Date] {
     switch reportRange {
     case .day1:
@@ -36,16 +60,16 @@ import SwiftyJSON
         .map { selectedDate.addingTimeInterval(Date.oneDayInSeconds * Double($0)) }
     }
   }
-  
+
   let realm = RealmProvider.main.realm
   var saleModels: Results<SaleModel>!
   var currencyModels: Results<CurrencyModel>!
-  
+
   var task: Task<Void, Never>?
   var token: NotificationToken?
-  
+
   // MARK: - life cycle
-  
+
   init() {
     updateSaleModelWhere()
     currencyModels = realm.objects(CurrencyModel.self)
@@ -55,38 +79,38 @@ import SwiftyJSON
       self.calSum()
     }
   }
-  
+
   /*
    Doc https://developer.apple.com/documentation/appstoreconnectapi/download_sales_and_trends_reports
-   
+
    https://developer.apple.com/help/app-store-connect/reference/sales-and-trends-reports-availability
    Sales and Trends reports availability
    Sales and Trends reports are available to download at the following times:
-   
+
    Daily reports are available the following day.
    Weekly reports are available on Mondays.
    Monthly reports are available five days after the end of the month.
    Yearly reports are available six days after the end of the year.
-   
+
    Reports are generally available by 8 a.m. Pacific Time (PT).
    北京的晚上11:00
    */
-  
+
   func loadApps() {
     guard store.connectKeyModel.isValid else {
       return
     }
-    
+
     updateSaleModelWhere()
     cancelTask()
-    
+
     task = Task {
       guard !self.isLoadingPage else {
         return
       }
-      
+
       self.isLoadingPage = true
-      
+
       do {
         _ = try await self.loadAllSales()
         //        self.saveApps(models: models)
@@ -97,19 +121,19 @@ import SwiftyJSON
       self.isLoadingPage = false
     }
   }
-  
+
   func resetApps() {
     totalSaleModel = nil
     dailySaleModels = []
   }
-  
+
   func cancelTask() {
     isLoadingPage = false
     task?.cancel()
   }
-  
+
   // MARK: - private methods
-  
+
   private func loadAllSales() async throws -> [SaleModel] {
     try await filterReportDate.reversed()
       .asyncReduce([SaleModel]()) { result, date in
@@ -118,7 +142,7 @@ import SwiftyJSON
         return result
       }
   }
-  
+
   private func checkCaches(date: Date) -> Bool {
     let oldModelsCount = realm.objects(SaleModel.self).where {
       $0.day == date.string()
@@ -126,12 +150,12 @@ import SwiftyJSON
     }.count
     return oldModelsCount > 0
   }
-  
+
   private func loadDailySales(date: Date) async throws -> [SaleModel] {
     guard requestDataIgnoreCaches || checkCaches(date: date) == false else {
       return []
     }
-    
+
     let request = APIEndpoint
       .v1
       .salesReports
@@ -158,7 +182,7 @@ import SwiftyJSON
     saveDailyApps(date: date, models: result)
     return result
   }
-  
+
   @MainActor
   private func updateApps(models: [SaleModel]) {
     // SKU分组
@@ -173,12 +197,11 @@ import SwiftyJSON
         + " - "
         + selectedDate.string()
     }
-    
+
     dailySaleModels = dic.keys
       .compactMap { sku -> SaleReportModel? in
         if let models = dic[sku],
-           let first = models.first
-        {
+           let first = models.first {
           let reportModel = SaleReportModel(id: first.id, title: first.title, productType: first.productType == .iap ? .iap : .saleApp, showDateRange: showDateRange, update: 0, units: 0, revenue: 0)
           let total = models.reduce(into: reportModel) { partialResult, model in
             switch model.productType {
@@ -200,19 +223,19 @@ import SwiftyJSON
       .sorted(by: { $0.title < $1.title })
       .sorted(by: { $0.revenue > $1.revenue })
     var total = SaleReportModel(id: "Total", title: "Total", productType: .total, showDateRange: showDateRange, update: 0, units: 0, revenue: 0)
-    dailySaleModels.forEach { model in
+    for model in dailySaleModels {
       total.units += model.units
       total.update += model.update
       total.revenue += model.revenue
     }
     totalSaleModel = total
   }
-  
+
   func getRate(_ code: String) -> Double {
     let currency = realm.object(ofType: CurrencyModel.self, forPrimaryKey: code)
     return currency?.rate ?? 1
   }
-  
+
   func getRates() {
     lastCheckRatesDate = Date().yesterday.unixTimestamp
     if Date().yesterday.unixTimestamp >= lastCheckRatesDate {
@@ -228,7 +251,7 @@ import SwiftyJSON
       }
     }
   }
-  
+
   func updateCurrencies(currencies: [CurrencyModel]) {
     if currencies.isEmpty {
       loadRatesJSON()
@@ -236,13 +259,12 @@ import SwiftyJSON
       saveCurrencies(currencies: currencies)
     }
   }
-  
+
   func loadRatesJSON() {
     guard currencyModels.count == 0 else { return }
 
     if let url = Bundle.main.url(forResource: "currency", withExtension: "json"),
-       let data = try? Data(contentsOf: url)
-    {
+       let data = try? Data(contentsOf: url) {
       let dic = JSON(data).dictionaryValue
       let result = dic.values.map { json in
         CurrencyModel(json: json)
@@ -295,12 +317,23 @@ import SwiftyJSON
   func calSum() {
     updateApps(models: Array(saleModels))
   }
-  
+
   func saveCurrencies(currencies: [CurrencyModel]) {
     realm.writeAsync {
       self.realm.add(currencies, update: .all)
     } onComplete: { _ in
       self.calSum()
     }
+  }
+
+  /// ColorfulX colors for report view
+  func bindingColors(for index: Int) -> Binding<[Color]> {
+    let colorIndex = index % ColorfulPreset.allCases.count
+    return .constant(ColorfulPreset.allCases[colorIndex].colors)
+  }
+
+  func bindingColors(for model: SaleReportModel) -> Binding<[Color]> {
+    let index = dailySaleModels.firstIndex(where: { $0.id == model.id }) ?? 0
+    return bindingColors(for: index)
   }
 }

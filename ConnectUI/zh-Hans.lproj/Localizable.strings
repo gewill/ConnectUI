@@ -25,6 +25,12 @@
 "Refresh" = "刷新";
 "Missing `Connect API Key` or invalid" = "缺少`Connect API 密钥`或无效";
 
+"Show Card Color Options" = "显示卡片颜色选项";
+"Foreground Color" = "前景色";
+"Color Speed %@" = "颜色速度 %@";
+"Color Noise %@" = "颜色噪点 %@";
+"Color Transition Interval %@" = "颜色过渡间距 %@";
+
 // MARK: - 密钥
 "Connect API Key" = "Connect API 密钥";
 "Verify" = "验证";

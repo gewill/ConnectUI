@@ -6,6 +6,7 @@
 //
 
 import AlertToast
+import ColorfulX
 import RealmSwift
 import SwiftUI
 
@@ -129,6 +130,22 @@ struct ReportView: View {
         .tint(.pink)
         .buttonStyle(.borderedProminent)
       }
+      Toggle("Show Card Color Options", isOn: $viewModel.showColorOptions)
+      if viewModel.showColorOptions {
+        ColorPicker("Foreground Color", selection: viewModel.bindingForegroundColor, supportsOpacity: false)
+        HStack {
+          Text("Color Speed \(viewModel.colorSpeed.formatted(.number.precision(.fractionLength(1))))")
+          Slider(value: $viewModel.colorSpeed, in: 0.0 ... 1.0)
+        }
+        HStack {
+          Text("Color Noise \(viewModel.colorNoise.formatted(.number.precision(.fractionLength(1))))")
+          Slider(value: $viewModel.colorNoise, in: 0.0 ... 10.0)
+        }
+        HStack {
+          Text("Color Transition Interval \(viewModel.colorTransitionInterval.formatted(.number.precision(.fractionLength(1))))")
+          Slider(value: $viewModel.colorTransitionInterval, in: 1.0 ... 100.0)
+        }
+      }
     }
   }
 
@@ -195,12 +212,13 @@ struct ReportView: View {
           }
         }
         .padding()
-        .background(Material.regular)
+        .foregroundColor(viewModel.bindingForegroundColor.wrappedValue)
         .background(
-          LinearGradient(
-            colors: Color.Gradient.kashmir,
-            startPoint: .top,
-            endPoint: .bottom
+          ColorfulView(
+            color: viewModel.bindingColors(for: model),
+            speed: $viewModel.colorSpeed,
+            noise: $viewModel.colorNoise,
+            transitionInterval: $viewModel.colorTransitionInterval
           )
         )
         .cornerRadius(Constant.cornerRadius)
@@ -239,16 +257,17 @@ struct ReportView: View {
           }
         }
         .padding()
-        .background(Material.regular)
         .background(
-          LinearGradient(
-            colors: Color.Gradient.noonToDusk,
-            startPoint: .top,
-            endPoint: .bottom
+          ColorfulView(
+            color: .constant(Color.Gradient.deepSpace),
+            speed: $viewModel.colorSpeed,
+            noise: $viewModel.colorNoise,
+            transitionInterval: $viewModel.colorTransitionInterval
           )
         )
         .cornerRadius(Constant.cornerRadius)
         .shadow(radius: 3)
+        .colorScheme(.dark)
       }
     }
   }
