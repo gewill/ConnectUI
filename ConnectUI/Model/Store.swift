@@ -22,7 +22,7 @@ class Store: ObservableObject {
   private init() {}
 
   func updateAPIProvider() {
-    provider = APIProvider(
+    provider = try? APIProvider(
       configuration: APIConfiguration(
         issuerID: store.connectKeyModel.issuerID,
         privateKeyID: store.connectKeyModel.privateKeyID,

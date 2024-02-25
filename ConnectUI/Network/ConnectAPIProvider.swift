@@ -19,7 +19,7 @@ import Foundation
 // var provider: APIProvider = .init(configuration: configuration)
 let store = Store.shared
 
-var provider: APIProvider = .init(
+var provider: APIProvider? = try? .init(
   configuration: APIConfiguration(
     issuerID: store.connectKeyModel.issuerID,
     privateKeyID: store.connectKeyModel.privateKeyID,

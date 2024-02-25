@@ -18,6 +18,7 @@ final class AppsListViewModel: ObservableObject {
   // MARK: - methods
 
   func loadApps() {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1
@@ -39,6 +40,7 @@ final class AppsListViewModel: ObservableObject {
 
   /// This demonstrates a failing example and how you can catch error details.
   func loadFailureExample() {
+    guard let provider = provider else { return }
     Task.detached {
       let requestWithError = APIEndpoint
         .v1

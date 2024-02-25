@@ -19,6 +19,7 @@ final class AppViewModel: ObservableObject {
   }
 
   func loadApps() {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1

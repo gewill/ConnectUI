@@ -19,6 +19,7 @@ final class TestFlightViewModel: ObservableObject {
   @Published var showToast = false
 
   func loadApps() {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1
@@ -35,6 +36,7 @@ final class TestFlightViewModel: ObservableObject {
   }
 
   func deleteTester(id: String) {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1
@@ -51,6 +53,7 @@ final class TestFlightViewModel: ObservableObject {
   }
 
   func addTester() {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1
@@ -67,6 +70,7 @@ final class TestFlightViewModel: ObservableObject {
   }
 
   func betaTesterInvitations() {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1
@@ -83,6 +87,7 @@ final class TestFlightViewModel: ObservableObject {
   }
 
   func removeBetaTesterAccessToApps(id: String) {
+    guard let provider = provider else { return }
     Task.detached {
       let request = APIEndpoint
         .v1

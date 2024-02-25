@@ -652,7 +652,7 @@
 			repositoryURL = "https://github.com/AvdLee/appstoreconnect-swift-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 3.0.0;
 			};
 		};
 		BEB6AFBE299E1CB6004E5F16 /* XCRemoteSwiftPackageReference "AlertToast" */ = {

@@ -128,6 +128,7 @@ import SwiftyJSON
   }
   
   private func loadDailySales(date: Date) async throws -> [SaleModel] {
+    guard let provider = provider else { return [] }
     guard requestDataIgnoreCaches || checkCaches(date: date) == false else {
       return []
     }

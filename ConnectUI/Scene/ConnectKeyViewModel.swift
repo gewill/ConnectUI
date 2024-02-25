@@ -25,7 +25,22 @@ final class ConnectKeyViewModel: ObservableObject {
 
   // MARK: - life cycle
 
-  func loadApps() {
+  @MainActor func loadApps() {
+    let connectKeyModel = Store.shared.connectKeyModel
+    do {
+      let config = try APIConfiguration(
+        issuerID: connectKeyModel.issuerID,
+        privateKeyID: connectKeyModel.privateKeyID,
+        privateKey: connectKeyModel.truePrivateKey
+      )
+      let provider = APIProvider(configuration: config)
+      loadDailySales(provider: provider)
+    } catch {
+      updateTestState(.error(error.localizedDescription))
+    }
+  }
+  
+  func loadDailySales(provider: APIProvider) {
     Task.detached {
       await self.updateTestState(.testing)
       let request = APIEndpoint
@@ -40,7 +55,7 @@ final class ConnectKeyViewModel: ObservableObject {
         ))
 
       do {
-        let _ = try await provider.request(request)
+        _ = try await provider.request(request)
         await self.updateTestState(.success)
       } catch {
         await self.updateTestState(.error(error.localizedDescription))
