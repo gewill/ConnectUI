@@ -137,11 +137,11 @@ import SwiftyJSON
       .v1
       .salesReports
       .get(parameters: .init(
-        filterFrequency: [.daily],
-        filterReportDate: [date.string()],
-        filterReportSubType: [.summary],
+        filterVendorNumber: [store.connectKeyModel.vendorNumber],
         filterReportType: [.sales],
-        filterVendorNumber: [store.connectKeyModel.vendorNumber]
+        filterReportSubType: [.summary],
+        filterFrequency: [.daily],
+        filterReportDate: [date.string()]
       ))
     let gz = try await provider.request(request)
     let data = try gz.gunzipped()

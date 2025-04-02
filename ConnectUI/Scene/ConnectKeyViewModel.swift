@@ -47,11 +47,11 @@ final class ConnectKeyViewModel: ObservableObject {
         .v1
         .salesReports
         .get(parameters: .init(
+          filterVendorNumber: [store.connectKeyModel.vendorNumber],
+          filterReportType: [.sales],
+          filterReportSubType: [.summary],
           filterFrequency: [.daily],
           filterReportDate: [self.selectedDate.string()],
-          filterReportSubType: [.summary],
-          filterReportType: [.sales],
-          filterVendorNumber: [store.connectKeyModel.vendorNumber]
         ))
 
       do {
